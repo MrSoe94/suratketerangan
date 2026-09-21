@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generator Surat Keterangan Sekolah</title>
+<style>
+:root{--primary:#1d4ed8;--border:#cbd5e1;--bg:#f1f5f9}
+*{box-sizing:border-box}
+body{font-family:"Segoe UI",Arial,sans-serif;background:var(--bg);margin:0;padding:20px;color:#0f172a}
+.wrapper{display:grid;grid-template-columns:340px 1fr;gap:20px;max-width:1300px;margin:0 auto}
+h1{grid-column:1/-1;font-size:20px;text-align:center;margin:0 0 6px}
+.sub{grid-column:1/-1;text-align:center;color:#475569;font-size:13px;margin:0 0 10px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.panel h2{font-size:14px;margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid var(--primary);color:var(--primary)}
+label{display:block;font-size:12px;font-weight:600;margin:10px 0 4px;color:#334155}
+input,select{width:100%;padding:7px 9px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;background:#fff}
+.btn{display:inline-block;margin-top:16px;padding:9px 16px;border:none;border-radius:8px;background:var(--primary);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+.btn:hover{background:#1e40af}
+.btn.ghost{background:#e2e8f0;color:#0f172a;margin-left:6px}
+.paper{background:#fff;border:1px solid var(--border);border-radius:10px;padding:40px 50px;min-height:900px;font-family:"Times New Roman",Georgia,serif;font-size:12pt;line-height:1.6;color:#000;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kop{display:flex;align-items:center;gap:16px;border-bottom:3px double #000;padding-bottom:8px;margin-bottom:18px}
+.logo{width:80px;height:80px;border:1px dashed #94a3b8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#64748b;text-align:center;flex-shrink:0}
+.kop-text{text-align:center;flex:1}
+.kop-text .pemerintah{font-size:11pt;letter-spacing:.5px;white-space:pre-line}
+.kop-text .sekolah{font-size:15pt;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.kop-text .alamat,.kop-text .kontak{font-size:9.5pt;font-style:italic}
+.nomor-block{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.nomor-block .right{text-align:right}
+table.nomor{border-collapse:collapse;table-layout:fixed;width:340px}
+table.nomor td{padding:1px 4px 1px 0;vertical-align:top;font-size:12pt}
+table.nomor td.lbl{width:85px}
+table.nomor td.titik{width:14px;text-align:center}
+.isi{text-align:justify;text-justify:inter-word}
+.isi p{margin:0 0 12px}
+.indent{text-indent:48px}
+table.identitas{border-collapse:collapse;margin:6px 0 14px}
+table.identitas td{padding:2px 6px;vertical-align:top;font-size:12pt}
+table.identitas td.lbl{width:165px;white-space:nowrap}
+table.identitas td.garis{width:10px;text-align:center}
+.ttd-area{display:flex;justify-content:flex-end;margin-top:48px}
+.ttd{text-align:left;width:300px}
+.ttd .ruang{height:70px}
+.ttd .nama{font-weight:700;text-decoration:underline;margin-bottom:2px}
+@media print{body{background:#fff;padding:0}.panel,h1,.sub,.btn{display:none!important}.wrapper{display:block;max-width:none}.paper{border:none;box-shadow:none;border-radius:0;padding:20px 28px;min-height:auto}@page{size:A4;margin:14mm}}
+@media (max-width:900px){.wrapper{grid-template-columns:1fr}.paper{padding:24px}}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <h1>Generator Surat Keterangan Sekolah</h1>
+  <p class="sub">Tanda tangan di kanan rata kiri &middot; Nomor sejajar &middot; paragraf justify</p>
+
+  <div class="panel">
+    <h2>Data Sekolah &amp; Surat</h2>
+    <label>Jenjang</label>
+    <select id="jenjang">
+      <option value="PEMERINTAH KABUPATEN|DINAS PENDIDIKAN">SMP / SMA / SMK</option>
+      <option value="PEMERINTAH KOTA|DINAS PENDIDIKAN">SD / MI</option>
+    </select>
+    <label>Nama Sekolah</label><input id="namaSekolah" value="SMP Negeri 1 Contoh">
+    <label>Alamat Sekolah</label><input id="alamatSekolah" value="Jl. Pendidikan No. 1, Kec. Contoh, Kab. Contoh">
+    <label>Kontak / NPSN</label><input id="kontak" value="Telp. (021) 1234567 &middot; NPSN: 20100001">
+    <label>Nomor Surat</label><input id="nomorSurat" value="421/SK-001/2026">
+    <label>Perihal</label><input id="perihal" value="Surat Keterangan Siswa Aktif">
+    <label>Tempat &amp; Tanggal Surat</label><input id="tempatTanggal" value="Bekasi, 10 Januari 2026">
+
+    <h2 style="margin-top:18px">Jenis &amp; Data Siswa</h2>
+    <label>Jenis Surat</label>
+    <select id="templateSurat">
+      <option value="aktif">Surat Keterangan Siswa Aktif</option>
+      <option value="penghasilan">Surat Keterangan Penghasilan Orang Tua</option>
+      <option value="beasiswa">Surat Keterangan Tidak Mampu (Beasiswa/KIP)</option>
+    </select>
+    <label>Nama Lengkap Siswa</label><input id="namaSiswa" value="Ahmad Fadillah Ramadhan">
+    <label>NISN</label><input id="nisn" value="3124567890">
+    <label>NIS</label><input id="nis" value="12345">
+    <label>Tempat, Tanggal Lahir</label><input id="ttl" value="Bekasi, 12 Mei 2010">
+    <label>Jenis Kelamin</label>
+    <select id="jenisKelaminSiswa"><option>Laki-laki</option><option>Perempuan</option></select>
+    <label>Alamat Siswa</label><input id="alamatSiswa" value="Jl. Melati No. 12, Kel. Sukamaju, Kec. Bekasi">
+    <label>Kelas</label><input id="kelas" value="VIII (Delapan)">
+    <label>Tahun Pelajaran</label><input id="tahunPelajaran" value="2025/2026">
+
+    <div id="wrapOrtu" style="display:none">
+      <h2 style="margin-top:18px">Data Orang Tua / Wali</h2>
+      <label>Nama Ayah</label><input id="namaAyah" value="Bapak Surya">
+      <label>Pekerjaan Ayah</label><input id="pekerjaanAyah" value="Buruh Harian Lepas">
+      <label>Nama Ibu</label><input id="namaIbu" value="Ibu Wati">
+      <label>Pekerjaan Ibu</label><input id="pekerjaanIbu" value="Ibu Rumah Tangga">
+      <label>Penghasilan Total / Bulan</label><input id="penghasilan" value="Rp 1.500.000">
+    </div>
+
+    <div id="wrapBeasiswa" style="display:none">
+      <label>Jumlah Tanggungan Keluarga</label><input id="tanggungan" value="5 orang">
+      <label>Keperluan</label><input id="keperluan" value="mengajukan bantuan KIP / beasiswa">
+    </div>
+
+    <h2 style="margin-top:18px">Penandatangan</h2>
+    <label>Jabatan</label><input id="jabatan" value="Kepala Sekolah">
+    <label>Nama Lengkap</label><input id="namaKepsek" value="Drs. H. Bambang Wijaya, M.Pd.">
+    <label>NIP</label><input id="nipKepsek" value="NIP. 19650101 199001 1 001">
+
+    <button class="btn" onclick="window.print()">Cetak / Simpan PDF</button>
+    <button class="btn ghost" onclick="location.reload()">Reset</button>
+  </div>
+
+  <div class="paper">
+    <div class="kop">
+      <div class="logo">LOGO<br>SEKOLAH</div>
+      <div class="kop-text">
+        <div class="pemerintah" id="outPemerintah">PEMERINTAH KABUPATEN
+DINAS PENDIDIKAN</div>
+        <div class="sekolah" id="outSekolah">SMP NEGERI 1 CONTOH</div>
+        <div class="alamat" id="outAlamat">Jl. Pendidikan No. 1</div>
+        <div class="kontak" id="outKontak">Telp. (021) 1234567</div>
+      </div>
+    </div>
+
+    <div class="nomor-block">
+      <table class="nomor">
+        <colgroup><col style="width:85px"><col style="width:14px"><col></colgroup>
+        <tr><td class="lbl">Nomor</td><td class="titik">:</td><td id="outNomor">421/SK-001/2026</td></tr>
+        <tr><td class="lbl">Lampiran</td><td class="titik">:</td><td>-</td></tr>
+        <tr><td class="lbl">Perihal</td><td class="titik">:</td><td id="outPerihal">Surat Keterangan Siswa Aktif</td></tr>
+      </table>
+      <div class="right" id="outTanggal">Bekasi, 10 Januari 2026</div>
+    </div>
+
+    <div class="isi">
+      <p class="indent" id="parPembuka">Yang bertanda tangan di bawah ini, Kepala SMP Negeri 1 Contoh, menerangkan bahwa:</p>
+
+      <table class="identitas">
+        <tr><td class="lbl">Nama Lengkap</td><td class="garis">:</td><td id="outNamaSiswa">Ahmad Fadillah Ramadhan</td></tr>
+        <tr><td class="lbl">NISN</td><td class="garis">:</td><td id="outNisn">3124567890</td></tr>
+        <tr><td class="lbl">NIS</td><td class="garis">:</td><td id="outNis">12345</td></tr>
+        <tr><td class="lbl">Tempat, Tanggal Lahir</td><td class="garis">:</td><td id="outTtl">Bekasi, 12 Mei 2010</td></tr>
+        <tr><td class="lbl">Jenis Kelamin</td><td class="garis">:</td><td id="outJk">Laki-laki</td></tr>
+        <tr><td class="lbl">Alamat</td><td class="garis">:</td><td id="outAlamatSiswa">Jl. Melati No. 12</td></tr>
+        <tr><td class="lbl">Kelas</td><td class="garis">:</td><td id="outKelas">VIII (Delapan)</td></tr>
+        <tr><td class="lbl">Tahun Pelajaran</td><td class="garis">:</td><td id="outTahun">2025/2026</td></tr>
+      </table>
+
+      <div id="paragraf"></div>
+
+      <p class="indent">Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya. Apabila terdapat kekeliruan, akan dilakukan perbaikan sebagaimana mestinya.</p>
+    </div>
+
+    <div class="ttd-area">
+      <div class="ttd">
+        <div id="outJabatan">Kepala Sekolah,</div>
+        <div class="ruang"></div>
+        <div class="nama" id="outNamaKepsek">Drs. H. Bambang Wijaya, M.Pd.</div>
+        <div id="outNipKepsek">NIP. 19650101 199001 1 001</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const PERIHAL={aktif:'Surat Keterangan Siswa Aktif',penghasilan:'Surat Keterangan Penghasilan Orang Tua',beasiswa:'Surat Keterangan Tidak Mampu'};
+
+function update(){
+  const v=id=>$(id).value.trim();
+  $('outPemerintah').textContent=v('jenjang').replace(/\|/g,'\n');
+  $('outSekolah').textContent=v('namaSekolah').toUpperCase();
+  $('outAlamat').textContent=v('alamatSekolah');
+  $('outKontak').textContent=v('kontak');
+  $('outNomor').textContent=v('nomorSurat');
+  $('outPerihal').textContent=v('perihal');
+  $('outTanggal').textContent=v('tempatTanggal');
+  $('outNamaSiswa').textContent=v('namaSiswa');
+  $('outNisn').textContent=v('nisn');
+  $('outNis').textContent=v('nis');
+  $('outTtl').textContent=v('ttl');
+  $('outJk').textContent=v('jenisKelaminSiswa');
+  $('outAlamatSiswa').textContent=v('alamatSiswa');
+  $('outKelas').textContent=v('kelas');
+  $('outTahun').textContent=v('tahunPelajaran');
+  $('outJabatan').textContent=v('jabatan')+',';
+  $('outNamaKepsek').textContent=v('namaKepsek');
+  $('outNipKepsek').textContent=v('nipKepsek');
+  $('parPembuka').textContent='Yang bertanda tangan di bawah ini, Kepala '+v('namaSekolah')+', menerangkan bahwa:';
+
+  const sek=esc(v('namaSekolah')),t=$('templateSurat').value;
+  let h='';
+  if(t==='aktif'){
+    h='<p class="indent">Berdasarkan keterangan dan hasil pemeriksaan administrasi sekolah, nama tersebut di atas adalah benar siswa/siswi yang masih aktif terdaftar dan mengikuti seluruh kegiatan pembelajaran di '+sek+' hingga saat ini.</p>';
+  }else if(t==='penghasilan'){
+    h='<p class="indent">Nama tersebut di atas adalah benar siswa/siswi '+sek+'. Orang tua/wali siswa/siswi tersebut, yaitu '+esc(v('namaAyah'))+' ('+esc(v('pekerjaanAyah'))+') sebagai ayah dan '+esc(v('namaIbu'))+' ('+esc(v('pekerjaanIbu'))+') sebagai ibu, memiliki penghasilan rata-rata sebesar '+esc(v('penghasilan'))+' per bulan yang digunakan untuk memenuhi kebutuhan keluarga sehari-hari.</p>';
+  }else{
+    h='<p class="indent">Nama tersebut di atas adalah benar siswa/siswi '+sek+' yang berasal dari keluarga kurang mampu. Orang tua/wali siswa/siswi tersebut adalah '+esc(v('namaAyah'))+' dan '+esc(v('namaIbu'))+' dengan jumlah tanggungan keluarga '+esc(v('tanggungan'))+' dan penghasilan rata-rata sebesar '+esc(v('penghasilan'))+' per bulan. Oleh karena itu, siswa/siswi tersebut memerlukan bantuan untuk '+esc(v('keperluan'))+'.</p>';
+  }
+  $('paragraf').innerHTML=h;
+}
+
+function applyTemplate(){
+  const t=$('templateSurat').value;
+  $('wrapOrtu').style.display=(t==='penghasilan'||t==='beasiswa')?'block':'none';
+  $('wrapBeasiswa').style.display=(t==='beasiswa')?'block':'none';
+  $('perihal').value=PERIHAL[t];
+  update();
+}
+
+document.querySelectorAll('.panel input,.panel select').forEach(el=>el.addEventListener('input',update));
+$('templateSurat').addEventListener('change',applyTemplate);
+applyTemplate();
+</script>
+</body>
+</html>
