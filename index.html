@@ -25,10 +25,16 @@ textarea{resize:vertical;min-height:80px}
 .srow{display:flex;align-items:center;gap:10px}
 .srow input{flex:1;padding:0}
 .srow span{font-size:12px;color:#334155;width:46px;text-align:right;font-weight:600}
+.sg{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center}
+.sg .mini{font-size:11px;color:#475569;margin:0;white-space:nowrap}
+.chk{display:flex;align-items:center;font-size:12px;color:#475569;margin:-4px 0 10px}
+.chk input{width:auto;height:auto;margin:0 6px 0 0;padding:0}
 .paper{background:#fff;border:1px solid var(--b);border-radius:10px;padding:40px 50px;min-height:900px;font-family:"Times New Roman",Georgia,serif;font-size:12pt;line-height:1.6;color:#000;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .kop{display:flex;align-items:center;gap:16px;border-bottom:3px double #000;padding-bottom:8px;margin-bottom:18px}
+#kop-manual-view{display:flex;align-items:center;gap:16px;width:100%}
 .logo{width:82px;height:82px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#64748b;text-align:center;flex-shrink:0;overflow:hidden}
 .logo img{width:100%;height:100%;object-fit:contain;padding:3px}
+#kop-img{width:100%;height:auto;max-height:200px;object-fit:contain}
 .kop-text{text-align:center;flex:1}
 .kop-text .pem{font-size:11pt;letter-spacing:.5px}
 .kop-text .sek{font-size:15pt;font-weight:700;text-transform:uppercase;letter-spacing:1px}
@@ -65,6 +71,7 @@ table.id td.g{width:10px;text-align:center}
   .ttd .in{width:100%;max-width:300px}
   .ttd .nm{margin-top:52px}
   .kop{gap:10px}
+  #kop-manual-view{gap:10px}
   .logo{width:60px;height:60px}
   .kop-text .sek{font-size:13pt}
   .btn{width:100%}
@@ -90,6 +97,17 @@ table.id td.g{width:10px;text-align:center}
   <div id="i-extra"></div>
 
   <h2>Kop Surat (Custom)</h2>
+  <label>Jenis Kop Surat</label>
+  <select id="i-kopmode">
+    <option value="manual">Kop Teks (Manual)</option>
+    <option value="gambar">Kop Gambar (Upload)</option>
+  </select>
+  <div id="kop-gambar" style="display:none">
+    <label>Upload Gambar Kop Surat</label>
+    <input type="file" id="i-kopimg" accept="image/*">
+    <p class="hint">Gambar kop harus sudah berisi kepala surat lengkap (logo, nama sekolah, alamat). Nomor, lampiran, perihal, dan tanggal tetap diisi manual.</p>
+  </div>
+  <div id="kop-manual">
   <label>Pemerintah (baris 1)</label>
   <input id="i-pem" value="PEMERINTAH KOTA MEDAN">
   <label>Dinas (baris 2)</label>
@@ -107,12 +125,31 @@ table.id td.g{width:10px;text-align:center}
     <input type="range" id="i-logosize" min="40" max="160" value="82">
     <span id="o-logosize">82px</span>
   </div>
+  <label>Font Teks Kop</label>
+  <select id="i-kopfont">
+    <option value="">Bawaan (Times New Roman &amp; co)</option>
+    <option value="Times New Roman, serif">Times New Roman</option>
+    <option value="Arial, sans-serif">Arial</option>
+    <option value="Calibri, sans-serif">Calibri</option>
+    <option value="Cambria, serif">Cambria</option>
+    <option value="Georgia, serif">Georgia</option>
+  </select>
+  <div class="sg">
+    <label class="mini">Ukuran Pemerintah/Dinas (pt)</label>
+    <input type="number" id="i-fzpem" value="11" min="6" max="30" step="0.5">
+    <label class="mini">Ukuran Nama Sekolah (pt)</label>
+    <input type="number" id="i-fzsek" value="15" min="6" max="40" step="0.5">
+    <label class="mini">Ukuran Alamat/Kontak (pt)</label>
+    <input type="number" id="i-fzal" value="9.5" min="5" max="20" step="0.5">
+  </div>
+  </div>
 
   <h2>Nomor Surat</h2>
   <label>Nomor</label><input id="i-nomor" value="421/SK-001/2026">
   <label>Lampiran</label><input id="i-lamp" value="-">
   <label>Perihal</label><input id="i-perihal" value="Surat Keterangan Siswa Aktif">
   <label>Tempat &amp; Tanggal</label><input id="i-tgl" value="Bekasi, 10 Januari 2026">
+  <label class="chk"><input type="checkbox" id="i-autotgl" checked> Tanggal otomatis (hari ini)</label>
 
   <h2>Data Siswa <span class="hint" style="display:inline;font-weight:400">(centang = baris tampil di surat)</span></h2>
   <label id="lbl-nama"><input type="checkbox" id="c-nama" checked><span class="ltxt">Nama Lengkap</span></label><input id="i-nama" value="Ahmad Fadillah Ramadhan">
@@ -147,14 +184,17 @@ Siswa/siswi tersebut di bawah ini adalah benar siswa/siswi UPT SD NEGERI 067953 
 </div>
 
 <div class="paper">
-  <div class="kop">
-    <div class="logo" id="logo">LOGO<br>SEKOLAH</div>
-    <div class="kop-text">
-      <div class="pem"><span id="o-pem"></span><br><span id="o-dinas"></span></div>
-      <div class="sek"><span id="o-sek"></span></div>
-      <div class="al"><span id="o-alamat"></span></div>
-      <div class="ko"><span id="o-kontak"></span></div>
+  <div class="kop" id="kop-box">
+    <div id="kop-manual-view">
+      <div class="logo" id="logo">LOGO<br>SEKOLAH</div>
+      <div class="kop-text">
+        <div class="pem" id="k-pem"><span id="o-pem"></span><br><span id="o-dinas"></span></div>
+        <div class="sek" id="k-sek"><span id="o-sek"></span></div>
+        <div class="al" id="k-al"><span id="o-alamat"></span></div>
+        <div class="ko" id="k-ko"><span id="o-kontak"></span></div>
+      </div>
     </div>
+    <img id="kop-img" alt="" style="display:none">
   </div>
 
   <div class="nb">
@@ -258,6 +298,35 @@ function terapkan(){const v=document.getElementById("i-jenis").value,t=T[v]||T.a
 }
 document.querySelectorAll(".panel input,.panel select,.panel textarea").forEach(el=>el.addEventListener("input",()=>{updt();paragraf("i-pembuka","o-pembuka");paragraf("i-penutup","o-penutup");}));
 document.getElementById("i-jenis").addEventListener("change",terapkan);
+function bindKopFont(){
+  document.getElementById("i-kopfont").addEventListener("input",e=>{const v=e.target.value;["k-pem","k-sek","k-al","k-ko"].forEach(id=>{document.getElementById(id).style.fontFamily=v;});});
+  document.getElementById("i-fzpem").addEventListener("input",e=>{document.getElementById("k-pem").style.fontSize=(e.target.value||"")+"pt";});
+  document.getElementById("i-fzsek").addEventListener("input",e=>{document.getElementById("k-sek").style.fontSize=(e.target.value||"")+"pt";});
+  document.getElementById("i-fzal").addEventListener("input",e=>{const v=(e.target.value||"")+"pt";document.getElementById("k-al").style.fontSize=v;document.getElementById("k-ko").style.fontSize=v;});
+}
+bindKopFont();
+const BULAN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+function fillAutoTgl(){
+  const cb=document.getElementById("i-autotgl");
+  if(!cb||!cb.checked)return;
+  const el=document.getElementById("i-tgl");
+  const namaBulan=BULAN[new Date().getMonth()], hari=new Date().getDate(), tahun=new Date().getFullYear();
+  const tempat=(el.value||"").split(",")[0].trim();
+  el.value=(tempat?tempat+", ":"")+hari+" "+namaBulan+" "+tahun;
+  document.getElementById("o-tgl").textContent=el.value;
+}
+document.getElementById("i-autotgl").addEventListener("change",fillAutoTgl);
+window.addEventListener("beforeprint",fillAutoTgl);
+fillAutoTgl();
+let kopImgSet=false;
+document.getElementById("i-kopimg").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const img=document.getElementById("kop-img");img.src=r.result;kopImgSet=true;applyKopMode();};r.readAsDataURL(f);});
+function applyKopMode(){const m=document.getElementById("i-kopmode").value;
+  document.getElementById("kop-manual").style.display=m==="gambar"?"none":"";
+  document.getElementById("kop-gambar").style.display=m==="gambar"?"":"none";
+  const box=document.getElementById("kop-box"),mv=document.getElementById("kop-manual-view"),img=document.getElementById("kop-img");
+  if(m==="gambar"&&kopImgSet){mv.style.display="none";img.style.display="block";box.style.borderBottom="none";}
+  else{mv.style.display="";img.style.display="none";box.style.borderBottom="";}}
+document.getElementById("i-kopmode").addEventListener("change",applyKopMode);
 document.getElementById("i-logo").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById("logo").innerHTML='<img src="'+r.result+'" alt="logo">'};r.readAsDataURL(f);});
 document.getElementById("i-logosize").addEventListener("input",e=>{const v=e.target.value;const lg=document.getElementById("logo");lg.style.width=v+"px";lg.style.height=v+"px";document.getElementById("o-logosize").textContent=v+"px";});
 bindChecks();
