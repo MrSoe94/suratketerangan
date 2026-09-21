@@ -13,9 +13,15 @@ body{font-family:"Segoe UI",Arial,sans-serif;background:#f1f5f9;margin:0;padding
 .panel h2{font-size:14px;margin:14px 0 10px;padding-bottom:8px;border-bottom:2px solid var(--p);color:var(--p)}
 label{display:block;font-size:12px;font-weight:600;margin:10px 0 4px;color:#334155}
 input,select,textarea{width:100%;padding:7px 9px;border:1px solid var(--b);border-radius:6px;font-size:13px;font-family:inherit;background:#fff}
+input[type=checkbox]{width:auto;height:auto;margin:0 6px 0 0;padding:0;vertical-align:middle}
 textarea{resize:vertical;min-height:80px}
 .btn{display:inline-block;margin-top:16px;padding:9px 16px;border:none;border-radius:8px;background:var(--p);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
 .btn:hover{background:#1e40af}
+.btn-mini{margin-top:8px;padding:7px 12px;background:#334155}
+.btn-mini:hover{background:#1e293b}
+.crow{display:grid;grid-template-columns:1fr 1fr 38px;gap:8px;margin-bottom:8px}
+.cdel{background:#dc2626;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:13px}
+.cdel:hover{background:#b91c1c}
 .paper{background:#fff;border:1px solid var(--b);border-radius:10px;padding:40px 50px;min-height:900px;font-family:"Times New Roman",Georgia,serif;font-size:12pt;line-height:1.6;color:#000;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .kop{display:flex;align-items:center;gap:16px;border-bottom:3px double #000;padding-bottom:8px;margin-bottom:18px}
 .logo{width:82px;height:82px;border:1px dashed #94a3b8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#64748b;text-align:center;flex-shrink:0;overflow:hidden}
@@ -71,9 +77,11 @@ table.id td.g{width:10px;text-align:center}
     <option value="aktif">Surat Keterangan Siswa Aktif</option>
     <option value="pindah">Surat Keterangan Pindah Sekolah</option>
     <option value="lulus">Surat Keterangan Telah Menyelesaikan Pendidikan</option>
+    <option value="nonskhu">Surat Keterangan Tidak Dikeluarkan SKHU</option>
     <option value="tidakmampu">Surat Keterangan Tidak Mampu (KIP / Beasiswa)</option>
     <option value="penghasilan">Surat Keterangan Penghasilan Orang Tua/Wali</option>
     <option value="baik">Surat Keterangan Berkelakuan Baik</option>
+    <option value="penugasan">Surat Penugasan Guru (Surat Tugas)</option>
   </select>
   <p class="hint">Memilih jenis surat akan mengisi <b>Perihal</b> dan <b>isi surat</b> sesuai template (mengambil nama sekolah &amp; tahun pelajaran saat ini). Anda tetap bisa menyuntingnya setelah dipilih.</p>
   <div id="i-extra"></div>
@@ -98,16 +106,21 @@ table.id td.g{width:10px;text-align:center}
   <label>Perihal</label><input id="i-perihal" value="Surat Keterangan Siswa Aktif">
   <label>Tempat &amp; Tanggal</label><input id="i-tgl" value="Bekasi, 10 Januari 2026">
 
-  <h2>Data Siswa</h2>
-  <label>Nama Lengkap</label><input id="i-nama" value="Ahmad Fadillah Ramadhan">
-  <label>NISN</label><input id="i-nisn" value="3124567890">
-  <label>NIS</label><input id="i-nis" value="12345">
-  <label>Tempat, Tanggal Lahir</label><input id="i-ttl" value="Bekasi, 12 Mei 2010">
-  <label>Jenis Kelamin</label>
+  <h2>Data Siswa <span class="hint" style="display:inline;font-weight:400">(centang = baris tampil di surat)</span></h2>
+  <label id="lbl-nama"><input type="checkbox" id="c-nama" checked><span class="ltxt">Nama Lengkap</span></label><input id="i-nama" value="Ahmad Fadillah Ramadhan">
+  <label id="lbl-nisn"><input type="checkbox" id="c-nisn" checked><span class="ltxt">NISN</span></label><input id="i-nisn" value="3124567890">
+  <label id="lbl-nis"><input type="checkbox" id="c-nis" checked><span class="ltxt">NIS</span></label><input id="i-nis" value="12345">
+  <label id="lbl-ttl"><input type="checkbox" id="c-ttl" checked><span class="ltxt">Tempat, Tanggal Lahir</span></label><input id="i-ttl" value="Bekasi, 12 Mei 2010">
+  <label id="lbl-jk"><input type="checkbox" id="c-jk" checked><span class="ltxt">Jenis Kelamin</span></label>
   <select id="i-jk"><option>Laki-laki</option><option>Perempuan</option></select>
-  <label>Alamat Siswa</label><input id="i-alamat-s" value="Jl. Melati No. 12, Kel. Sukamaju, Kec. Bekasi">
-  <label>Kelas</label><input id="i-kelas" value="VIII (Delapan)">
-  <label>Tahun Pelajaran</label><input id="i-tahun" value="2025/2026">
+  <label id="lbl-alamat-s"><input type="checkbox" id="c-alamat-s" checked><span class="ltxt">Alamat Siswa</span></label><input id="i-alamat-s" value="Jl. Melati No. 12, Kel. Sukamaju, Kec. Bekasi">
+  <label id="lbl-kelas"><input type="checkbox" id="c-kelas" checked><span class="ltxt">Kelas</span></label><input id="i-kelas" value="VIII (Delapan)">
+  <label id="lbl-tahun"><input type="checkbox" id="c-tahun" checked><span class="ltxt">Tahun Pelajaran</span></label><input id="i-tahun" value="2025/2026">
+
+  <h2>Baris Khusus (Custom)</h2>
+  <div id="crows"></div>
+  <button type="button" class="btn btn-mini" onclick="addCustom()">+ Tambah Baris</button>
+  <p class="hint">Tambah baris tambahan di tabel surat, misalnya NIK, No. HP, atau keterangan lain.</p>
 
   <h2>Isi Surat</h2>
   <label>Paragraf pembuka (sebelum identitas)</label>
@@ -148,15 +161,16 @@ Siswa/siswi tersebut di bawah ini adalah benar siswa/siswi UPT SD NEGERI 067953 
   <div class="isi" id="o-pembuka"></div>
 
   <table class="id">
-    <tr><td class="lbl">Nama Lengkap</td><td class="g">:</td><td id="o-nama"></td></tr>
-    <tr><td class="lbl">NISN</td><td class="g">:</td><td id="o-nisn"></td></tr>
-    <tr><td class="lbl">NIS</td><td class="g">:</td><td id="o-nis"></td></tr>
-    <tr><td class="lbl">Tempat, Tanggal Lahir</td><td class="g">:</td><td id="o-ttl"></td></tr>
-    <tr><td class="lbl">Jenis Kelamin</td><td class="g">:</td><td id="o-jk"></td></tr>
-    <tr><td class="lbl">Alamat</td><td class="g">:</td><td id="o-alamat-s"></td></tr>
-    <tr><td class="lbl">Kelas</td><td class="g">:</td><td id="o-kelas"></td></tr>
-    <tr><td class="lbl">Tahun Pelajaran</td><td class="g">:</td><td id="o-tahun"></td></tr>
+    <tr data-k="nama"><td class="lbl">Nama Lengkap</td><td class="g">:</td><td id="o-nama"></td></tr>
+    <tr data-k="nisn"><td class="lbl">NISN</td><td class="g">:</td><td id="o-nisn"></td></tr>
+    <tr data-k="nis"><td class="lbl">NIS</td><td class="g">:</td><td id="o-nis"></td></tr>
+    <tr data-k="ttl"><td class="lbl">Tempat, Tanggal Lahir</td><td class="g">:</td><td id="o-ttl"></td></tr>
+    <tr data-k="jk"><td class="lbl">Jenis Kelamin</td><td class="g">:</td><td id="o-jk"></td></tr>
+    <tr data-k="alamat-s"><td class="lbl">Alamat</td><td class="g">:</td><td id="o-alamat-s"></td></tr>
+    <tr data-k="kelas"><td class="lbl">Kelas</td><td class="g">:</td><td id="o-kelas"></td></tr>
+    <tr data-k="tahun"><td class="lbl">Tahun Pelajaran</td><td class="g">:</td><td id="o-tahun"></td></tr>
     <tbody id="o-extra"></tbody>
+    <tbody id="o-custom"></tbody>
   </table>
 
   <div class="isi" id="o-penutup"></div>
@@ -178,6 +192,8 @@ function paragraf(src,dst){const t=document.getElementById(src),o=document.getEl
   o.innerHTML=t.value.split(/\n\s*\n/).map(p=>'<p class="indent">'+p.replace(/\n/g,"<br>")+"</p>").join("");}
 
 /* Template tiap jenis surat. {sek} dan {tp} diisi otomatis dari form. */
+const D_STUDENT={nama:"Ahmad Fadillah Ramadhan",nisn:"3124567890",nis:"12345",ttl:"Bekasi, 12 Mei 2010",jk:"Laki-laki","alamat-s":"Jl. Melati No. 12, Kel. Sukamaju, Kec. Bekasi",kelas:"VIII (Delapan)",tahun:"2025/2026"};
+const D_TEACHER={nama:"Budi Santoso, S.Pd.",nisn:"19800412 200012 1 004",nis:"0030055610",ttl:"Medan, 12 April 1980",jk:"Laki-laki","alamat-s":"Jl. Melati No. 10, Medan",kelas:"Pembina Tk. I, IV/b",tahun:"Guru Kelas"};
 const T={
  aktif:{perihal:"Surat Keterangan Siswa Aktif",extra:[],
   pembuka:"Yang bertanda tangan di bawah ini, Kepala {sek}, menerangkan bahwa:\n\nSiswa/siswi tersebut di bawah ini adalah benar siswa/siswi {sek} yang aktif mengikuti pembelajaran pada Tahun Pelajaran {tp}:",
@@ -188,6 +204,9 @@ const T={
  lulus:{perihal:"Surat Keterangan Telah Menyelesaikan Pendidikan",extra:[["No. Seri Ijazah","ijazah"]],
   pembuka:"Yang bertanda tangan di bawah ini, Kepala {sek}, menerangkan bahwa:\n\nSiswa/siswi tersebut di bawah ini adalah benar siswa/siswi {sek} dan telah menyelesaikan seluruh program pendidikan pada Tahun Pelajaran {tp}:",
   penutup:"Siswa dimaksud dinyatakan lulus dan ijazah telah diterbitkan. Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya."},
+ nonskhu:{perihal:"Surat Keterangan Tidak Dikeluarkan SKHU",extra:[],
+  pembuka:"Yang bertanda tangan di bawah ini, Kepala {sek}, menerangkan bahwa:\n\nSiswa/siswi tersebut di bawah ini adalah benar siswa/siswi {sek} pada Tahun Pelajaran {tp} dan telah dinyatakan lulus. Pada Tahun Pelajaran {tp} tersebut Pemerintah tidak menerbitkan Surat Keterangan Hasil Ujian (SKHU) karena Ujian Nasional tidak lagi dilaksanakan. Yang diterbitkan Pemerintah hanya Ijazah, dan pihak sekolah hanya menerbitkan Surat Keterangan Lulus (SKL):",
+  penutup:"Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya."},
  tidakmampu:{perihal:"Surat Keterangan Tidak Mampu",extra:[["Nama Ayah","ayah"],["Pekerjaan Ayah","kerja-a"],["Nama Ibu","ibu"],["Pekerjaan Ibu","kerja-b"],["Jumlah Tanggungan","tanggungan"]],
   pembuka:"Yang bertanda tangan di bawah ini, Kepala {sek}, menerangkan bahwa:\n\nSiswa/siswi tersebut di bawah ini adalah benar siswa/siswi {sek} pada Tahun Pelajaran {tp}, yang berasal dari keluarga kurang mampu:",
   penutup:"Surat keterangan ini dibuat untuk memenuhi persyaratan pengajuan bantuan pendidikan (KIP/beasiswa). Demikian dibuat untuk dapat dipergunakan sebagaimana mestinya."},
@@ -196,9 +215,14 @@ const T={
   penutup:"Penghasilan tersebut adalah sebagaimana adanya dan tidak dilipatgandakan. Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya."},
  baik:{perihal:"Surat Keterangan Berkelakuan Baik",extra:[],
   pembuka:"Yang bertanda tangan di bawah ini, Kepala {sek}, menerangkan bahwa:\n\nSiswa/siswi tersebut di bawah ini adalah benar siswa/siswi {sek} pada Tahun Pelajaran {tp}:",
-  penutup:"Selama menjadi siswa/siswi di sekolah kami, yang bersangkutan berkelakuan baik dan tidak pernah melakukan pelanggaran tata tertib sekolah. Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya."}
+  penutup:"Selama menjadi siswa/siswi di sekolah kami, yang bersangkutan berkelakuan baik dan tidak pernah melakukan pelanggaran tata tertib sekolah. Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya."},
+ penugasan:{perihal:"Surat Penugasan Guru",data:D_TEACHER,rows:["Nama Lengkap","NIP","NUPTK","Tempat, Tanggal Lahir","Jenis Kelamin","Alamat","Pangkat/Golongan","Jabatan"],
+  extra:[["Unit Tugas","unit"],["Tugas yang Dilaksanakan","tugas"],["Tempat / Lokasi","lokasi"],["Periode Pelaksanaan","periode"]],
+  pembuka:"Yang bertanda tangan di bawah ini, Kepala {sek}, dengan ini menugaskan guru yang tersebut di bawah ini untuk melaksanakan tugas:",
+  penutup:"Demikian surat penugasan ini dibuat untuk dilaksanakan dengan penuh tanggung jawab."}
 };
-const DEFAULT={"ayah":"Bapak Suparman","kerja-a":"Buruh Harian Lepas","ibu":"Ibu Siti Aminah","kerja-b":"Ibu Rumah Tangga","tanggungan":"3 orang","hasil":"Rp 1.500.000","alasan":"Mengikuti orang tua pindah tugas","tujuan":"SMP Negeri 2 Medan","ijazah":"J-123456"};
+const DEFAULT={"ayah":"Bapak Suparman","kerja-a":"Buruh Harian Lepas","ibu":"Ibu Siti Aminah","kerja-b":"Ibu Rumah Tangga","tanggungan":"3 orang","hasil":"Rp 1.500.000","alasan":"Mengikuti orang tua pindah tugas","tujuan":"SMP Negeri 2 Medan","ijazah":"J-123456","unit":"UPT SD NEGERI 067953","tugas":"Panitia Pelaksana Kegiatan Sekolah","lokasi":"Aula Sekolah","periode":"1 Juli 2026 s.d. 18 Juli 2026"};
+const DEFROWS=["Nama Lengkap","NISN","NIS","Tempat, Tanggal Lahir","Jenis Kelamin","Alamat","Kelas","Tahun Pelajaran"];
 
 function renderExtra(v){const box=document.getElementById("i-extra"),out=document.getElementById("o-extra");
   const rows=(T[v]||T.aktif).extra;
@@ -207,17 +231,39 @@ function renderExtra(v){const box=document.getElementById("i-extra"),out=documen
   out.innerHTML=rows.map(r=>'<tr><td class="lbl">'+r[0]+'</td><td class="g">:</td><td id="o-'+r[1]+'"></td></tr>').join("");
   rows.forEach(r=>{const i=document.getElementById("i-"+r[1]);i.addEventListener("input",()=>{document.getElementById("o-"+r[1]).textContent=i.value;});document.getElementById("o-"+r[1]).textContent=i.value;});
 }
+function setRows(v){const rows=(T[v]||T.aktif).rows||DEFROWS,trs=document.querySelectorAll("table.id tr");
+  const map=["nama","nisn","nis","ttl","jk","alamat-s","kelas","tahun"];
+  rows.forEach((lb,i)=>{if(trs[i])trs[i].querySelector(".lbl").textContent=lb;
+    const lp=document.getElementById("lbl-"+map[i]),lt=lp&&lp.querySelector(".ltxt");if(lt)lt.textContent=lb;});}
+const CBS=["nama","nisn","nis","ttl","jk","alamat-s","kelas","tahun"];
+function bindChecks(){CBS.forEach(k=>{const c=document.getElementById("c-"+k);if(!c)return;c.addEventListener("change",()=>{document.querySelectorAll('table.id tr[data-k="'+k+'"]').forEach(tr=>{tr.style.display=c.checked?"":"none";});});});}
+function resetChecks(){CBS.forEach(k=>{const c=document.getElementById("c-"+k);if(c)c.checked=true;document.querySelectorAll('table.id tr[data-k="'+k+'"]').forEach(tr=>tr.style.display="");});}
 function terapkan(){const v=document.getElementById("i-jenis").value,t=T[v]||T.aktif,
-  sek=document.getElementById("i-sek").value,tp=document.getElementById("i-tahun").value,
+  d=t.data||D_STUDENT;
+  Object.keys(d).forEach(k=>{const el=document.getElementById("i-"+k);if(el)el.value=d[k];});
+  const sek=document.getElementById("i-sek").value,tp=document.getElementById("i-tahun").value,
   fill=s=>s.replace(/\{sek\}/g,sek).replace(/\{tp\}/g,tp);
   document.getElementById("i-perihal").value=t.perihal;
   document.getElementById("i-pembuka").value=fill(t.pembuka);
   document.getElementById("i-penutup").value=fill(t.penutup);
-  renderExtra(v);updt();paragraf("i-pembuka","o-pembuka");paragraf("i-penutup","o-penutup");
+  renderExtra(v);setRows(v);resetChecks();updt();paragraf("i-pembuka","o-pembuka");paragraf("i-penutup","o-penutup");
 }
 document.querySelectorAll(".panel input,.panel select,.panel textarea").forEach(el=>el.addEventListener("input",()=>{updt();paragraf("i-pembuka","o-pembuka");paragraf("i-penutup","o-penutup");}));
 document.getElementById("i-jenis").addEventListener("change",terapkan);
 document.getElementById("i-logo").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById("logo").innerHTML='<img src="'+r.result+'" alt="logo">'};r.readAsDataURL(f);});
+bindChecks();
+let customRows=[];
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function previewCustom(){const out=document.getElementById("o-custom");
+  out.innerHTML=customRows.map(r=>'<tr><td class="lbl">'+esc(r.l)+'</td><td class="g">:</td><td>'+esc(r.v)+'</td></tr>').join("");}
+function renderCustom(){const box=document.getElementById("crows");
+  box.innerHTML=customRows.map((r,i)=>'<div class="crow"><input class="clbl" placeholder="Label (mis. NIK)" value="'+esc(r.l)+'"><input class="cval" placeholder="Isi" value="'+esc(r.v)+'"><button type="button" class="cdel" data-i="'+i+'">x</button></div>').join("");
+  box.querySelectorAll(".clbl").forEach((el,i)=>el.addEventListener("input",()=>{customRows[i].l=el.value;previewCustom();}));
+  box.querySelectorAll(".cval").forEach((el,i)=>el.addEventListener("input",()=>{customRows[i].v=el.value;previewCustom();}));
+  box.querySelectorAll(".cdel").forEach(b=>b.addEventListener("click",()=>{customRows.splice(+b.dataset.i,1);renderCustom();previewCustom();}));
+  previewCustom();}
+function addCustom(){customRows.push({l:"",v:""});renderCustom();}
+renderCustom();
 terapkan();
 </script>
 </body>
